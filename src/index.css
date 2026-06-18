@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Cork textures ── */
+.cork-light {
+  background-color: #C8975A;
+  background-image:
+    radial-gradient(ellipse at 15% 25%, rgba(169,118,62,0.55) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 15%, rgba(184,132,72,0.45) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 65%, rgba(169,118,62,0.40) 0%, transparent 42%),
+    radial-gradient(ellipse at 10% 75%, rgba(196,154,90,0.35) 0%, transparent 32%),
+    radial-gradient(ellipse at 72% 58%, rgba(169,118,62,0.30) 0%, transparent 48%),
+    radial-gradient(ellipse at 35% 45%, rgba(191,139,77,0.38) 0%, transparent 38%),
+    radial-gradient(ellipse at 88% 82%, rgba(169,118,62,0.45) 0%, transparent 28%);
+}
+
+.cork-dark {
+  background-color: #3D2B1F;
+  background-image:
+    radial-gradient(ellipse at 15% 25%, rgba(42,29,20,0.55) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 15%, rgba(42,29,20,0.45) 0%, transparent 38%),
+    radial-gradient(ellipse at 50% 65%, rgba(42,29,20,0.40) 0%, transparent 42%),
+    radial-gradient(ellipse at 10% 75%, rgba(61,43,31,0.35) 0%, transparent 32%),
+    radial-gradient(ellipse at 72% 58%, rgba(42,29,20,0.30) 0%, transparent 48%),
+    radial-gradient(ellipse at 35% 45%, rgba(50,31,21,0.38) 0%, transparent 38%),
+    radial-gradient(ellipse at 88% 82%, rgba(42,29,20,0.45) 0%, transparent 28%);
+}
+
+/* ── Wooden frames ── */
+.wood-frame-light {
+  background: linear-gradient(160deg, #E8C87A 0%, #D9B36C 25%, #C4993A 55%, #D4AD60 78%, #E0C070 100%);
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.15), inset 0 -2px 8px rgba(0,0,0,0.1), 0 6px 24px rgba(0,0,0,0.45);
+}
+
+.wood-frame-dark {
+  background: linear-gradient(160deg, #2a1a0e 0%, #1A1A1A 30%, #0f0f0f 60%, #1a1008 80%, #2a1a0e 100%);
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.4), inset 0 -2px 8px rgba(0,0,0,0.3), 0 6px 24px rgba(0,0,0,0.8);
+}
+
+/* ── Note colors ── */
+.note-yellow    { background-color: #F4D35E; }
+.note-pink      { background-color: #F2A6A6; }
+.note-mint      { background-color: #A8D8B9; }
+.note-lightblue { background-color: #A6CEF2; }
+.note-lavender  { background-color: #C9A8E8; }
+
+.dark .note-yellow    { background-color: #CFA93E; }
+.dark .note-pink      { background-color: #CE7E7E; }
+.dark .note-mint      { background-color: #7FB896; }
+.dark .note-lightblue { background-color: #7DAACF; }
+.dark .note-lavender  { background-color: #A07FC0; }
+
+/* ── Animations ── */
+@keyframes wobble {
+  0%   { transform: var(--nr) translateY(0)    rotate(0deg); }
+  20%  { transform: var(--nr) translateY(-3px) rotate(-3deg); }
+  40%  { transform: var(--nr) translateY(-2px) rotate(3deg); }
+  60%  { transform: var(--nr) translateY(-1px) rotate(-2deg); }
+  80%  { transform: var(--nr) translateY(-1px) rotate(1deg); }
+  100% { transform: var(--nr) translateY(0)    rotate(0deg); }
+}
+
+@keyframes streak-pulse {
+  0%   { transform: scale(1);   filter: none; }
+  35%  { transform: scale(1.4); filter: drop-shadow(0 0 6px #E8633A); }
+  65%  { transform: scale(1.2); filter: drop-shadow(0 0 3px #E8633A); }
+  100% { transform: scale(1);   filter: none; }
+}
+
+@keyframes confetti-drop {
+  0%   { transform: translateY(0)    rotate(0deg)   scale(1);   opacity: 1; }
+  100% { transform: translateY(70px) rotate(400deg) scale(0.3); opacity: 0; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+@keyframes board-snap {
+  from { }
+  to   { }
+}
+
+.anim-wobble  { animation: wobble 0.5s ease-in-out forwards; }
+.anim-streak  { animation: streak-pulse 0.65s ease-in-out forwards; }
+.anim-modal   { animation: modal-in 0.2s ease-out forwards; }
+
+/* ── Board slide ── */
+.boards-wrap {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+}
+.boards-wrap.animated {
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Pin ── */
+.pin {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #E8E8E8, #8C8C8C 70%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+}
+
+/* ── Scrollbar hide ── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Color swatches ── */
+.swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.swatch.active { border-color: #2A2A2A; transform: scale(1.18); }
+.dark .swatch.active { border-color: #fff; }
