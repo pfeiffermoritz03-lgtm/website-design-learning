@@ -18,7 +18,7 @@ const DBL_MAX_MS   = 320;
 const LONG_MS      = 500;
 
 export default function HabitCard({
-  habit, entries, isDark, font,
+  habit, entries, isDark, font, editMode,
   onDrop, onToggle, onEdit, onDelete,
   boardRef,
 }) {
@@ -52,21 +52,21 @@ export default function HabitCard({
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
 
-    ptr.current      = e.pointerId;
-    startPos.current = { x: e.clientX, y: e.clientY };
-    moved.current    = false;
+    ptr.current       = e.pointerId;
+    startPos.current  = { x: e.clientX, y: e.clientY };
+    moved.current     = false;
     startTime.current = Date.now();
 
     const rect = cardRef.current.getBoundingClientRect();
     dragOffset.current = { ox: e.clientX - rect.left, oy: e.clientY - rect.top };
 
-    longTimer.current = setTimeout(() => {
-      if (!moved.current) {
-        clearLong();
-        onDelete(habit.id);
-      }
-    }, LONG_MS);
-  }, [habit.id, onDelete]);
+    // Long-press only in edit mode (for delete)
+    if (editMode) {
+      longTimer.current = setTimeout(() => {
+        if (!moved.current) { clearLong(); onDelete(habit.id); }
+      }, LONG_MS);
+    }
+  }, [habit.id, onDelete, editMode]);
 
   const handlePointerMove = useCallback((e) => {
     if (ptr.current !== e.pointerId) return;
@@ -77,10 +77,10 @@ export default function HabitCard({
     if (!moved.current && dist > TAP_MAX_DIST) {
       moved.current = true;
       clearLong();
-      setDragging(true);
+      if (editMode) setDragging(true);
     }
 
-    if (moved.current && boardRef.current) {
+    if (moved.current && editMode && boardRef.current) {
       const board = boardRef.current.getBoundingClientRect();
       const x = Math.max(0, Math.min(e.clientX - board.left - dragOffset.current.ox, board.width  - 160));
       const y = Math.max(0, Math.min(e.clientY - board.top  - dragOffset.current.oy, board.height - 160));
@@ -88,13 +88,13 @@ export default function HabitCard({
       cardRef.current.style.left = x + 'px';
       cardRef.current.style.top  = y + 'px';
     }
-  }, [boardRef]);
+  }, [boardRef, editMode]);
 
   const handlePointerUp = useCallback((e) => {
     if (ptr.current !== e.pointerId) return;
     clearLong();
 
-    if (moved.current) {
+    if (moved.current && editMode) {
       setDragging(false);
       onDrop(habit.id, currentPos.current);
       return;
@@ -103,6 +103,11 @@ export default function HabitCard({
     setDragging(false);
     const elapsed = Date.now() - startTime.current;
     if (elapsed < TAP_MAX_MS) {
+      if (editMode) {
+        // In edit mode: single tap = open edit modal
+        onEdit(habit.id);
+        return;
+      }
       const now = Date.now();
       if (now - lastTap.current < DBL_MAX_MS) {
         lastTap.current = 0;
@@ -125,7 +130,7 @@ export default function HabitCard({
         }, DBL_MAX_MS);
       }
     }
-  }, [habit.id, onToggle, onEdit]);
+  }, [habit.id, onToggle, onEdit, editMode]);
 
   return (
     <div
@@ -147,7 +152,7 @@ export default function HabitCard({
         maxWidth: 180,
         borderRadius: 4,
         padding: '18px 12px 10px',
-        cursor: dragging ? 'grabbing' : 'grab',
+        cursor: dragging ? 'grabbing' : editMode ? 'grab' : 'pointer',
         userSelect: 'none',
         zIndex: dragging ? 500 : 10,
         touchAction: 'none',

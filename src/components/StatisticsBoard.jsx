@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { calcStreak, todayStr, getWeekDays } from '../utils/streak';
+import HabitChart from './HabitChart';
 
 const DAY_LABELS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 const NOTE_BG = '#F5F0E8';
@@ -255,6 +256,7 @@ export default function StatisticsBoard({ habits, entries, isDark, font, onGoHom
           ? <WeekView habit={habit} entries={entries} isDark={isDark} font={font} />
           : <MonthView habit={habit} entries={entries} isDark={isDark} font={font} />
         }
+        <HabitChart habit={habit} entries={entries} isDark={isDark} font={font} />
       </div>
 
       {/* Home icon */}
